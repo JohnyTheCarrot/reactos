@@ -19,10 +19,13 @@
 #include <commctrl.h>
 #include <shellapi.h>
 #include <tlhelp32.h>
+#include <iphlpapi.h>
 
 #include "column.h"
 #include "taskmgr.h"
+#include "netwdata.h"
 #include "perfdata.h"
+#include "netwpage.h"
 #include "procpage.h"
 #include "applpage.h"
 #include "endproc.h"

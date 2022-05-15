@@ -20,6 +20,9 @@ IDB_TRAYICON BITMAP "res/trayicon.bmp"
 /* UTF-8 */
 #pragma code_page(65001)
 
+#include "lang/en-US.rc"
+
+/*
 #ifdef LANGUAGE_BG_BG
     #include "lang/bg-BG.rc"
 #endif
@@ -110,3 +113,4 @@ IDB_TRAYICON BITMAP "res/trayicon.bmp"
 #ifdef LANGUAGE_ZH_TW
     #include "lang/zh-TW.rc"
 #endif
+*/

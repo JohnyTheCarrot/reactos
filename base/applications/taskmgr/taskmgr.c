@@ -178,6 +178,12 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
         return -1;
     }
 
+    /* Initialize network data */
+    if (!NetwDataInitialize())
+    {
+        return -1;
+    }
+
     /*
      * Set our shutdown parameters: we want to shutdown the very last,
      * without displaying any end task dialog if needed.
@@ -189,6 +195,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     /* Save our settings to the registry */
     SaveSettings();
     PerfDataUninitialize();
+    NetwDataUninitialize();
     CloseHandle(hMutex);
     if (hWindowMenu)
         DestroyMenu(hWindowMenu);
@@ -508,6 +515,7 @@ TaskManagerWndProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         RefreshApplicationPage();
         RefreshProcessPage();
         RefreshPerformancePage();
+        RefreshNetworkPage();
         TrayIcon_ShellUpdateTrayIcon();
         break;
 
@@ -623,6 +631,7 @@ BOOL OnCreate(HWND hWnd)
     hApplicationPage = CreateDialogW(hInst, MAKEINTRESOURCEW(IDD_APPLICATION_PAGE), hWnd, ApplicationPageWndProc); EnableDialogTheme(hApplicationPage);
     hProcessPage = CreateDialogW(hInst, MAKEINTRESOURCEW(IDD_PROCESS_PAGE), hWnd, ProcessPageWndProc); EnableDialogTheme(hProcessPage);
     hPerformancePage = CreateDialogW(hInst, MAKEINTRESOURCEW(IDD_PERFORMANCE_PAGE), hWnd, PerformancePageWndProc); EnableDialogTheme(hPerformancePage);
+    hNetworkPage = CreateDialogW(hInst, MAKEINTRESOURCEW(IDD_NETWORK_PAGE), hWnd, NetworkPageWndProc); EnableDialogTheme(hNetworkPage);
 #else
     hApplicationPage = CreateDialogW(hInst, MAKEINTRESOURCEW(IDD_APPLICATION_PAGE), hTabWnd, ApplicationPageWndProc); EnableDialogTheme(hApplicationPage);
     hProcessPage = CreateDialogW(hInst, MAKEINTRESOURCEW(IDD_PROCESS_PAGE), hTabWnd, ProcessPageWndProc); EnableDialogTheme(hProcessPage);
@@ -645,6 +654,11 @@ BOOL OnCreate(HWND hWnd)
     item.mask = TCIF_TEXT;
     item.pszText = szTemp;
     (void)TabCtrl_InsertItem(hTabWnd, 2, &item);
+    LoadStringW(hInst, IDS_TAB_NETWORK, szTemp, 256);
+    memset(&item, 0, sizeof(TCITEM));
+    item.mask = TCIF_TEXT;
+    item.pszText = szTemp;
+    (void)TabCtrl_InsertItem(hTabWnd, 3, &item);
 
     /* Size everything correctly */
     GetClientRect(hWnd, &rc);
@@ -772,6 +786,7 @@ BOOL OnCreate(HWND hWnd)
     RefreshApplicationPage();
     RefreshProcessPage();
     RefreshPerformancePage();
+    RefreshNetworkPage();
 
     TrayIcon_ShellAddTrayIcon();
 
@@ -1033,6 +1048,7 @@ void TaskManager_OnTabWndSelChange(void)
         ShowWindow(hApplicationPage, SW_SHOW);
         ShowWindow(hProcessPage, SW_HIDE);
         ShowWindow(hPerformancePage, SW_HIDE);
+        ShowWindow(hNetworkPage, SW_HIDE);
         BringWindowToTop(hApplicationPage);
 
         LoadStringW(hInst, IDS_MENU_LARGEICONS, szTemp, 256);
@@ -1065,6 +1081,7 @@ void TaskManager_OnTabWndSelChange(void)
         ShowWindow(hApplicationPage, SW_HIDE);
         ShowWindow(hProcessPage, SW_SHOW);
         ShowWindow(hPerformancePage, SW_HIDE);
+        ShowWindow(hNetworkPage, SW_HIDE);
         BringWindowToTop(hProcessPage);
 
         LoadStringW(hInst, IDS_MENU_SELECTCOLUMNS, szTemp, 256);
@@ -1091,6 +1108,7 @@ void TaskManager_OnTabWndSelChange(void)
         ShowWindow(hApplicationPage, SW_HIDE);
         ShowWindow(hProcessPage, SW_HIDE);
         ShowWindow(hPerformancePage, SW_SHOW);
+        ShowWindow(hNetworkPage, SW_HIDE);
         BringWindowToTop(hPerformancePage);
         if (GetMenuItemCount(hMenu) > 5) {
             DeleteMenu(hMenu, 3, MF_BYPOSITION);
@@ -1126,6 +1144,19 @@ void TaskManager_OnTabWndSelChange(void)
             CheckMenuItem(hViewMenu, ID_VIEW_SHOWKERNELTIMES, MF_BYCOMMAND|MF_CHECKED);
         else
             CheckMenuItem(hViewMenu, ID_VIEW_SHOWKERNELTIMES, MF_BYCOMMAND|MF_UNCHECKED);
+
+        /*
+         * Give the tab control focus
+         */
+        if (!bWasKeyboardInput)
+            SetFocus(hTabWnd);
+        break;
+    case 3:
+        ShowWindow(hApplicationPage, SW_HIDE);
+        ShowWindow(hProcessPage, SW_HIDE);
+        ShowWindow(hPerformancePage, SW_HIDE);
+        ShowWindow(hNetworkPage, SW_SHOW);
+        BringWindowToTop(hNetworkPage);
 
         /*
          * Give the tab control focus

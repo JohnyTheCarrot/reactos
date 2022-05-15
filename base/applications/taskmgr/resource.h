@@ -13,6 +13,7 @@
 #define IDR_TASKMANAGER               130
 #define IDD_PROCESS_PAGE              133
 #define IDD_PERFORMANCE_PAGE          134
+#define IDD_NETWORK_PAGE              157
 #define IDR_WINDOWSMENU               135
 #define IDI_TASKMANAGER               136
 #define IDI_WINDOW                    137
@@ -120,6 +121,9 @@
 #define IDC_MEM_USAGE_HISTORY_GRAPH      1049
 #define IDC_CPU_USAGE_HISTORY_GRAPH      1050
 #define IDC_CPU31                        1051
+#define IDC_NET_SEND                     1052
+#define IDC_NET_RECEIVE                  1053
+#define IDC_NET_LIST                     1054
 
 #define IDS_TOTALS_HANDLE_COUNT          1060
 #define IDS_TOTALS_THREAD_COUNT          1061
@@ -133,6 +137,8 @@
 #define IDS_KERNEL_MEMORY_TOTAL          1069
 #define IDS_KERNEL_MEMORY_PAGED          1070
 #define IDS_KERNEL_MEMORY_NONPAGED       1071
+#define IDS_NET_SEND                     1072
+#define IDS_NET_RECEIVE                  1073
 
 #define ID_FILE_NEW                  32771
 #define ID_OPTIONS_ALWAYSONTOP       32773
@@ -197,6 +203,8 @@
 #define IDS_TAB_APPS          310
 #define IDS_TAB_PROCESSES     311
 #define IDS_TAB_PERFORMANCE   312
+#define IDS_TAB_NETWORK       370
+#define IDS_TAB_INTERFC_NAME  371
 #define IDS_TAB_TASK          313
 #define IDS_TAB_STATUS        314
 #define IDS_TAB_IMAGENAME     315

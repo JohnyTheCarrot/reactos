@@ -44,6 +44,7 @@ typedef struct _IO_COUNTERS {
 #define RUN_APPS_PAGE
 #define RUN_PROC_PAGE
 #define RUN_PERF_PAGE
+#define RUN_NETW_PAGE
 
 #define STATUS_WINDOW	2001
 #define STATUS_SIZE1	85
